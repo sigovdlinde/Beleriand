@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block main_content %}
+<!-- https://stackoverflow.com/questions/62564102/django-form-checkbox-automatically-update-database-via-ajax -->
+<!-- '{% url 'post_form_api' %}' -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+  <div class="row">
+    <div class="col-sm-10">
+      {{ map|safe }}
+    </div>
+    <div class="col-sm-2">
+      <form method="POST" id="form_legend">
+        <h3><span style="color: #e8c4b4;">Places</span></h3>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="check_legend" value="cities">
+          <label class="form-check-label" for="check_legend">Cities</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="check_legend" value="poi">
+          <label class="form-check-label" for="check_legend">Points of Interest</label>
+        </div>
+        <h3><span style="color: #e8c4b4;">Travels</span></h3>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="check_legend" value="frodo">
+          <label class="form-check-label" for="check_legend">Frodo</label>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $("input[type=checkbox]").on("click",function(){
+      var data = []
+      $('input[type=checkbox]:checked').each(function () {
+            data.push($(this).val());
+        });
+      $.ajax({ url: '/third/',
+                          type: "POST",
+                          dataType: "json",
+                          data: JSON.stringify({data: data}),
+                          cache: false,
+                          success: function(data){console.log(data.list)}
+                 }).done(function(data) {
+                      if (data.result === true){
+                          alert(data.message);
+                     }
+                 });
+            });
+  </script>
+
+{% endblock main_content %}
